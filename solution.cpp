@@ -1,4 +1,4 @@
-//*******************************************************Question1****************************************************
+//*****************************************************Question3*****************************************************
 #include <iostream>
 // #include <conio.h>
 #include <fstream>
@@ -246,7 +246,7 @@ class book{
             books_remaining += 1;
         }
         bool check(string title,string isbn,string isbn13,string author1,string author2, string author3, string author4, string author5,string identifier){
-            if(this->original_title == title && this->isbn == isbn && this->isbn13 == isbn13 && this->author1 == author1 && this->author2 == author2 && this->author3 == author3 && this->author4 == author4 && this->author5 == author5 && this->identifier == identifier){
+            if(this->title == title || this->isbn == isbn || this->isbn13 == isbn13 || this->author1 == author1 || this->author2 == author2 || this->author3 == author3 || this->author4 == author4 || this->author5 == author5 || this->identifier == identifier){
                 return true;
             }
             return false;
@@ -353,6 +353,7 @@ class magzine{
             this->rank_wordRate = rank_wordRate;
             this->rank_daysToBePaid = rank_daysToBePaid;
             this->rank_paymentDifficulty = rank_paymentDifficulty;
+            cout<<publication;
 
         }
         void setIdentifier(int no){
@@ -378,7 +379,7 @@ class magzine{
             }
         }
         bool check(string publication,string identifier){
-            if(this->publication == publication && this->identifier == identifier){
+            if(this->publication == publication || this->identifier == identifier){
                 return true;
             }
             return false;
@@ -458,7 +459,7 @@ class journal{
         }
     }
     bool check(string name,string identifier){
-        if(this->name == name && this->identifier == identifier){
+        if(this->name == name || this->identifier == identifier){
             return true;
         }
         return false;
@@ -594,6 +595,7 @@ class library{
 
      }
      void addUser(string name,int type){
+         cout<<"I am here";
         user newUser;
         
         newUser.addDetails(this->noOfUsers,name,type);
@@ -834,6 +836,7 @@ void readingMagzines(library *Library,string nameofFile){
 }
 
 void readingBooks(library *Library,string nameofFile){
+    cout<<"I am in readingBooks";
     string line;
     ifstream file(nameofFile);
     
