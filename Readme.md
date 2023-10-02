@@ -8,8 +8,7 @@
    * ./< Name of any binary > 
 
 # Input Formats
-   * Investment year : Integer Type
-   * Investment Amount : Double Type
+   * 
 
 # Used Libraries provided by C++ inbuilt
    *  iostream
