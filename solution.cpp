@@ -245,7 +245,7 @@ class book{
             books_remaining += 1;
         }
         bool check(string title,string isbn,string isbn13,string author1,string author2, string author3, string author4, string author5,string identifier){
-            if(this->title == title || this->isbn == isbn || this->isbn13 == isbn13 || this->author1 == author1 || this->author2 == author2 || this->author3 == author3 || this->author4 == author4 || this->author5 == author5 || this->identifier == identifier){
+            if(this->original_title == title && this->isbn == isbn && this->isbn13 == isbn13 && this->author1 == author1 && this->author2 == author2 && this->author3 == author3 && this->author4 == author4 && this->author5 == author5 && this->identifier == identifier){
                 return true;
             }
             return false;
@@ -352,7 +352,6 @@ class magzine{
             this->rank_wordRate = rank_wordRate;
             this->rank_daysToBePaid = rank_daysToBePaid;
             this->rank_paymentDifficulty = rank_paymentDifficulty;
-            cout<<publication;
 
         }
         void setIdentifier(int no){
@@ -378,7 +377,7 @@ class magzine{
             }
         }
         bool check(string publication,string identifier){
-            if(this->publication == publication || this->identifier == identifier){
+            if(this->publication == publication && this->identifier == identifier){
                 return true;
             }
             return false;
@@ -458,7 +457,7 @@ class journal{
         }
     }
     bool check(string name,string identifier){
-        if(this->name == name || this->identifier == identifier){
+        if(this->name == name && this->identifier == identifier){
             return true;
         }
         return false;
@@ -594,7 +593,6 @@ class library{
 
      }
      void addUser(string name,int type){
-         cout<<"I am here";
         user newUser;
         
         newUser.addDetails(this->noOfUsers,name,type);
@@ -835,7 +833,6 @@ void readingMagzines(library *Library,string nameofFile){
 }
 
 void readingBooks(library *Library,string nameofFile){
-    cout<<"I am in readingBooks";
     string line;
     ifstream file(nameofFile);
     
@@ -1062,11 +1059,58 @@ int main(){
                     break;
                 }
         case '2':
-                {   
+                {   string name;
+                    int type;
+                     
+                    cout<<"For registration please provide you details as follows: \n";
+                    cout<<"Enter your name: ";
+                    cin.ignore();
+                    getline(cin,name);
+                    cout<<"Enter your user type 0 for student and 1 for professor: ";
+                    cin>>type;
+                    Library.addUser(name,type);
+                    cout<<"\nDo you wanted to continue with further options y/n: ";
+                    char option;
+                    cin >> option;
+                    if(option == 'n'){
+                        return 0;
+                    }
                     break;
                 }
         case '3':
-                {  
+                {   string title ,isbn,isbn13,author1,author2,author3,author4,author5,identifier;
+                    cout<<"Enter details of the book to purchase it: \n";
+                    cout<<"Enter title:- ";
+                    cin.ignore();
+                    getline(cin,title);
+                    cout<< "Enter isbn:- ";
+                    cin >> isbn;
+                    cout<<"Enter isbn13:- ";
+                    cin>>isbn13;
+                    cout<<"Enter author1:- ";
+                    cin.ignore();
+                    getline(cin,author1);
+                     cout<<"Enter author2:- ";
+                    cin.ignore();
+                    getline(cin,author2);
+                     cout<<"Enter author3:- ";
+                    cin.ignore();
+                    getline(cin,author3);
+                     cout<<"Enter author4:- ";
+                     cin.ignore();
+                    getline(cin,author4);
+                     cout<<"Enter author5:- ";
+                     cin.ignore();
+                    getline(cin,author5);
+                    cout<<"Enter Identifier:- ";
+                    cin>>identifier;
+                    Library.purchase(title,isbn,isbn13,author1,author2,author3,author4,author5,identifier);
+                    cout<<"\nDo you wanted to continue with further options y/n: \n";
+                    char option;
+                    cin >> option;
+                    if(option == 'n'){
+                        return 0;
+                    }
                     break;
                 }
         case '4':
