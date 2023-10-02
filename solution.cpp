@@ -245,7 +245,7 @@ class book{
             books_remaining += 1;
         }
         bool check(string title,string isbn,string isbn13,string author1,string author2, string author3, string author4, string author5,string identifier){
-            if(this->original_title == title && this->isbn == isbn && this->isbn13 == isbn13 && this->author1 == author1 && this->author2 == author2 && this->author3 == author3 && this->author4 == author4 && this->author5 == author5 && this->identifier == identifier){
+            if(this->title == title || this->isbn == isbn || this->isbn13 == isbn13 || this->author1 == author1 || this->author2 == author2 || this->author3 == author3 || this->author4 == author4 || this->author5 == author5 || this->identifier == identifier){
                 return true;
             }
             return false;
@@ -378,7 +378,7 @@ class magzine{
             }
         }
         bool check(string publication,string identifier){
-            if(this->publication == publication && this->identifier == identifier){
+            if(this->publication == publication || this->identifier == identifier){
                 return true;
             }
             return false;
@@ -458,7 +458,7 @@ class journal{
         }
     }
     bool check(string name,string identifier){
-        if(this->name == name && this->identifier == identifier){
+        if(this->name == name || this->identifier == identifier){
             return true;
         }
         return false;
@@ -876,7 +876,215 @@ int main(){
     readingBooks(&Library,"books.csv");
     readingMagzines(&Library,"publications_rank.csv");
     readingJournal(&Library,"journals.csv");
-    
+    while(true){
+        cout<<"Enter one of the following options:- \n";
+        cout<<" 0 - Borrow \n 1 - find Book Location \n 2 - New User Registartion \n 3 - Purchase new Book \n 4 - Exit \n";
+        char choice;
+        cin>>choice;
+        switch (choice)
+        {
+        case '0':
+            {   cout<<"What do you want borrow B - books , J - journals , M - magzines: \n";
+                char item;
+                cin>>item;
+                if(item == 'B'){
+                    string title ,isbn,isbn13,author1,author2,author3,author4,author5,identifier;
+                    cout<<"Enter details of the book to borrow\n";
+                    cout<<"Enter title:- ";
+                    cin.ignore();
+                    getline(cin,title);
+                    cout<< "Enter isbn:- ";
+                    cin >> isbn;
+                    cout<<"Enter isbn13:- ";
+                    cin>>isbn13;
+                    cout<<"Enter author1:- ";
+                    cin.ignore();
+                    getline(cin,author1);
+                     cout<<"Enter author2:- ";
+                    cin.ignore();
+                    getline(cin,author2);
+                     cout<<"Enter author3:- ";
+                    cin.ignore();
+                    getline(cin,author3);
+                     cout<<"Enter author4:- ";
+                     cin.ignore();
+                    getline(cin,author4);
+                     cout<<"Enter author5:- ";
+                     cin.ignore();
+                    getline(cin,author5);
+                    cout<<"Enter Identifier:- ";
+                    cin>>identifier;
+                    book *Book = Library.find(title ,isbn,isbn13,author1,author2,author3,author4,author5,identifier);
+                    if(Book == nullptr){
+                        cout<<"This Book is not available with us \n ";
+                    }else{
+                        string name;
+                        int uid;
+                        cout<<"we are having the book but for borrowing please provide us details about you :- \n";
+                        cout<<"Enter name: ";
+                        cin.ignore();
+                        getline(cin,name);
+                        cout<<"Enter user id:- ";
+                        cin>>uid;
+                        user *User = Library.find(uid);
+                        if(User == nullptr){
+                            cout<<"Your are not registered with us, Kindly register yourself first \n";
+                        }else{
+                            // User->borrowBooks(Book->getIdentifier());
+                            Book->borrow(User);
+                        }
+
+                    }
+                }else if(item == 'J'){
+                    string branch, name, identifier;
+                    cout<<"Enter details of the Journal to borrow\n";
+                    cout<< "Enter name:- ";
+                    cin.ignore();
+                    getline(cin,name);
+                    cout<<"Enter identifier:- ";
+                    cin>> identifier;
+                    journal *Journal = Library.find(" ",name,identifier);
+                    if(Journal == nullptr){
+                        cout<<"This Journal is not available with us \n ";
+                    }else{
+                        string name1;
+                        int uid;
+                        cout<<"we are having the book but for borrowing please provide us details about you :- \n";
+                        cout<<"Enter name: ";
+                        cin.ignore();
+                        getline(cin,name1);
+                        cout<<"Enter user id:- ";
+                        cin>>uid;
+                        user *User = Library.find(uid);
+                        if(User == nullptr){
+                            cout<<"Your are not registered with us, Kindly register yourself first \n";
+                        }else{
+                            // User->borrowJournals(Journal->getIdentifier());
+                            Journal->borrow(User);
+                        }
+                    }
+
+                }else if(item == 'M'){
+                    string publication,identifier;
+                    cout<<"Enter details of the Journal to borrow\n";
+                    cout<<"Enter publications:- ";
+                    cin.ignore();
+                    getline(cin,publication);
+                    cout<< "Enter identifier- ";
+                    cin >> identifier;
+                    magzine *Magzine= Library.find(publication,identifier);
+                    // cout<<Magzine<<"Magzine add";
+                    if(Magzine == nullptr){
+                        cout<<"This Magzine is not available with us \n ";
+                    }else{
+                        string name;
+                        int uid;
+                        cout<<"we are having the book but for borrowing please provide us details about you :- \n";
+                        cout<<"Enter name: ";
+                        cin.ignore();
+                        getline(cin,name);
+                        cout<<"Enter user id:- ";
+                        cin>>uid;
+                        user *User = Library.find(uid);
+                        if(User == nullptr){
+                            cout<<"\nYour are not registered with us, Kindly register yourself first ";
+                        }else{
+                            // User->borrowMagzines(Magzine->getIdentifier());
+                            Magzine->borrow(User);
+                        }
+                    }
+                }
+                 cout<<"\nDo you wanted to continue with further options y/n: \n";
+                        char option;
+                        cin >> option;
+                        if(option == 'n'){
+                            return 0;
+                        }
+                break;
+            }
+        case '1':
+                {   cout<<"What do you want borrow B - books , J - journals , M - magzines: \n";
+                    char item;
+                    cin>>item;
+                    if(item == 'B'){
+                        string title ,isbn,isbn13,author1,author2,author3,author4,author5,identifier;
+                        cout<<"Enter details of the book to get Location of it: \n";
+                        cout<<"Enter title:- ";
+                        cin.ignore();
+                        getline(cin,title);
+                        cout<< "Enter isbn:- ";
+                        cin >> isbn;
+                        cout<<"Enter isbn13:- ";
+                        cin>>isbn13;
+                        cout<<"Enter author1:- ";
+                        cin.ignore();
+                        getline(cin,author1);
+                        cout<<"Enter author2:- ";
+                        cin.ignore();
+                        getline(cin,author2);
+                        cout<<"Enter author3:- ";
+                        cin.ignore();
+                        getline(cin,author3);
+                        cout<<"Enter author4:- ";
+                        cin.ignore();
+                        getline(cin,author4);
+                        cout<<"Enter author5:- ";
+                        cin.ignore();
+                        getline(cin,author5);
+                        cout<<"Enter Identifier:- ";
+                        cin>>identifier;
+                        Library.getLocationOfBooks(title ,isbn,isbn13,author1,author2,author3,author4,author5,identifier);
+                    }else if(item == 'M'){
+                        string publication,identifier;
+                        cout<<"Enter details of the Magzine to get Location\n";
+                        cout<<"Enter publications:- ";
+                        cin.ignore();
+                        getline(cin,publication);
+                        cout<< "Enter identifier- ";
+                        cin >> identifier;
+                        Library.getLocationOfMagzines(publication,identifier);
+                    }else if(item == 'J'){
+                        string branch, name, identifier;
+                        cout<<"Enter details of the Journal to get Location\n";
+                        cout<< "Enter name:- ";
+                        cin.ignore();
+                        getline(cin,name);
+                        cout<<"Enter identifier:- ";
+                        cin>> identifier;
+                        Library.getLocationOfJournals(" ",name,identifier);
+                    }
+                    cout<<"\nDo you wanted to continue with further options y/n: \n";
+                    char option;
+                    cin >> option;
+                    if(option == 'n'){
+                        return 0; 
+                    }
+                    break;
+                }
+        case '2':
+                {   
+                    break;
+                }
+        case '3':
+                {  
+                    break;
+                }
+        case '4':
+                {   
+                    return 0; 
+                }
+        default:
+                {
+                    cout<<"Do you wanted to continue with further options y/n: \n";
+                    char option;
+                    cin >> option;
+                    if(option == 'n'){
+                        return 0;
+                    }
+                    break;
+                }
+        }
+    }
     
     return 0;
 }
