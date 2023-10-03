@@ -614,25 +614,32 @@ class library{
             noOfUsers++;
      }
      void getLocationOfBooks(string title,string isbn,string isbn13,string author1, string author2, string author3 ,string author4, string author5,string identifier){
-        book *temp = find(title,isbn,isbn13,author1,author2,author3,author4,author5,identifier);
+        string temp_Idt[3];
+        int i = 0;
+        //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
+        string token;
+        while(identifier.length() != 0 && i < 3){
+            token = identifier.substr(0,identifier.find_first_of("/"));
+            identifier = identifier.substr(identifier.find_first_of("/") + 1);
+            temp_Idt[i] = token;
+            i++;
+        } 
+        /*************************************************************/
+        string searchIdentifier = temp_Idt[0] + "/" + temp_Idt[1];
+        book *temp = find(title,isbn,isbn13,author1,author2,author3,author4,author5,searchIdentifier);
         if(temp == nullptr){
             cout << "Item is not present";
         }else{
             
-            string temp_Idt[3];
-            int i = 0;
-            //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
-            string token;
-            while(identifier.length() != 0 && i < 3){
-                token = identifier.substr(0,identifier.find_first_of("/"));
-                identifier = identifier.substr(identifier.find_first_of("/") + 1);
-                temp_Idt[i] = token;
-                i++;
-            } 
-            /*************************************************************/
             // cout<<temp_Idt[0]<<temp_Idt[1]<<typeid(temp_Idt[2]).name();
-            string fstoi = temp_Idt[2]+"";
-            int bno = stoi(fstoi);
+            string fstoi = temp_Idt[2];
+            int bno;
+            try{
+                bno = stoi(fstoi);
+            }catch(exception& e){
+                cout<<"Identifier drawer or copy id is not valid"<<endl;
+                return;
+            }
             int uid = temp->getUserIdOfTheBorrower(bno);
             if(uid == -1){
                 cout << "Book belongs to section : " << temp_Idt[0] << " shelf : " << temp_Idt[1] << " and drawer : " <<temp_Idt[2]<<endl;
@@ -650,25 +657,33 @@ class library{
         }
      }
      void getLocationOfJournals(string branch,string name,string identifier){
-        journal *temp = find(branch,name,identifier);
+        string temp_Idt[3];
+        int i = 0;
+        //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
+        string token;
+        while(identifier.length() != 0 && i < 3){
+            token = identifier.substr(0,identifier.find_first_of("/"));
+            identifier = identifier.substr(identifier.find_first_of("/") + 1);
+            temp_Idt[i] = token;
+            i++;
+        } 
+        /*************************************************************/
+        string searchIdentifier = temp_Idt[0] + "/" + temp_Idt[1];
+        journal *temp = find(branch,name,searchIdentifier);
         if(temp == nullptr){
             cout << "Item is not present";
         }else{
             
-            string temp_Idt[3];
-            int i = 0;
-            //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
-            string token;
-            while(identifier.length() != 0 && i < 3){
-                token = identifier.substr(0,identifier.find_first_of("/"));
-                identifier = identifier.substr(identifier.find_first_of("/") + 1);
-                temp_Idt[i] = token;
-                i++;
-            } 
-            /*************************************************************/
+            
             // cout<<temp_Idt[0]<<temp_Idt[1]<<typeid(temp_Idt[2]).name();
-            string fstoi = temp_Idt[2]+"";
-            int bno = stoi(fstoi);
+            string fstoi = temp_Idt[2];
+            int bno;
+            try{
+                bno = stoi(fstoi);
+            }catch(exception& e){
+                cout<<"Identifier drawer or copy id is not valid"<<endl;
+                return;
+            }
             int uid = temp->getUserIdOfTheBorrower(bno);
             if(uid == -1){
                 cout << "Jounal belongs to section : " << temp_Idt[0] << "virtual shelf : " << temp_Idt[1] << " and virtual drawer : " <<temp_Idt[2]<<endl;
@@ -684,25 +699,31 @@ class library{
         }
      }
      void getLocationOfMagzines(string publication,string identifier){
-        magzine *temp = find(publication,identifier);
+        string temp_Idt[3];
+        int i = 0;
+        //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
+        string token;
+        while(identifier.length() != 0 && i < 3){
+            token = identifier.substr(0,identifier.find_first_of("/"));
+            identifier = identifier.substr(identifier.find_first_of("/") + 1);
+            temp_Idt[i] = token;
+            i++;
+        } 
+        /*************************************************************/
+        string searchIdentifier = temp_Idt[0] + "/" + temp_Idt[1];
+        magzine *temp = find(publication,searchIdentifier);
         if(temp == nullptr){
             cout << "Item is not present";
         }else{
-            
-            string temp_Idt[3];
-            int i = 0;
-            //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
-            string token;
-            while(identifier.length() != 0 && i < 3){
-                token = identifier.substr(0,identifier.find_first_of("/"));
-                identifier = identifier.substr(identifier.find_first_of("/") + 1);
-                temp_Idt[i] = token;
-                i++;
-            } 
-            /*************************************************************/
             // cout<<temp_Idt[0]<<temp_Idt[1]<<typeid(temp_Idt[2]).name();
-            string fstoi = temp_Idt[2]+"";
-            int bno = stoi(fstoi);
+            string fstoi = temp_Idt[2];
+            int bno;
+            try{
+                bno = stoi(fstoi);
+            }catch(exception& e){
+                cout<<"Identifier drawer or copy id is not valid"<<endl;
+                return;
+            }
             int uid = temp->getUserIdOfTheBorrower(bno);
             if(uid == -1){
                 cout << "Magzine belongs to Virtual section : " << temp_Idt[0] << " Virtual shelf : " << temp_Idt[1] << " and Virtual drawer : " <<temp_Idt[2]<<endl;
@@ -868,6 +889,20 @@ void readingBooks(library *Library,string nameofFile){
     }
 }
 
+
+
+
+//****************************************Open Source Check Integer or string**********************************
+bool check_number(string str) {
+   for (int i = 0; i < str.length(); i++)
+   if (isdigit(str[i]) == false)
+      return false;
+      return true;
+}
+//**************************************************************************************************************
+
+
+
 int main(){
     library Library;
     readingBooks(&Library,"books.csv");
@@ -915,14 +950,29 @@ int main(){
                     if(Book == nullptr){
                         cout<<"This Book is not available with us \n ";
                     }else{
-                        string name;
-                        int uid;
                         cout<<"we are having the book but for borrowing please provide us details about you :- \n";
+                        string name;
+                        string suid;
+                        
                         cout<<"Enter name: ";
                         cin.ignore();
                         getline(cin,name);
+
+                        if(check_number(name) == true){
+                            cout<<"Not valid Name try again";
+                            return 0;
+                        }
+
                         cout<<"Enter user id:- ";
-                        cin>>uid;
+                        cin>>suid;
+
+                        if(check_number(suid) == false){
+                            cout<<"Not valid User id try again";
+                            return 0;
+                        }
+                        
+                        
+                        int uid = stoi(suid);
                         user *User = Library.find(uid);
                         if(User == nullptr){
                             cout<<"Your are not registered with us, Kindly register yourself first \n";
@@ -944,14 +994,29 @@ int main(){
                     if(Journal == nullptr){
                         cout<<"This Journal is not available with us \n ";
                     }else{
-                        string name1;
-                        int uid;
                         cout<<"we are having the book but for borrowing please provide us details about you :- \n";
+                        string name1;
+                        string suid;
+                        
                         cout<<"Enter name: ";
                         cin.ignore();
                         getline(cin,name1);
+
+                        if(check_number(name1) == true){
+                            cout<<"Not valid Name try again";
+                            return 0;
+                        }
+
                         cout<<"Enter user id:- ";
-                        cin>>uid;
+                        cin>>suid;
+
+                        if(check_number(suid) == false){
+                            cout<<"Not valid User id try again";
+                            return 0;
+                        }
+                        
+                        
+                        int uid = stoi(suid);
                         user *User = Library.find(uid);
                         if(User == nullptr){
                             cout<<"Your are not registered with us, Kindly register yourself first \n";
@@ -974,14 +1039,29 @@ int main(){
                     if(Magzine == nullptr){
                         cout<<"This Magzine is not available with us \n ";
                     }else{
-                        string name;
-                        int uid;
                         cout<<"we are having the book but for borrowing please provide us details about you :- \n";
+                        string name;
+                        string suid;
+                        
                         cout<<"Enter name: ";
                         cin.ignore();
                         getline(cin,name);
+
+                        if(check_number(name) == true){
+                            cout<<"Not valid Name try again";
+                            return 0;
+                        }
+
                         cout<<"Enter user id:- ";
-                        cin>>uid;
+                        cin>>suid;
+
+                        if(check_number(suid) == false){
+                            cout<<"Not valid User id try again";
+                            return 0;
+                        }
+                        
+                        
+                        int uid = stoi(suid);
                         user *User = Library.find(uid);
                         if(User == nullptr){
                             cout<<"\nYour are not registered with us, Kindly register yourself first ";
@@ -1060,14 +1140,34 @@ int main(){
                 }
         case '2':
                 {   string name;
+                    string stype;
                     int type;
                      
                     cout<<"For registration please provide you details as follows: \n";
                     cout<<"Enter your name: ";
                     cin.ignore();
                     getline(cin,name);
+                    
+                    if(check_number(name) == true){
+                        cout<<"Not valid Name try again";
+                        return 0;
+                    }
+
                     cout<<"Enter your user type 0 for student and 1 for professor: ";
-                    cin>>type;
+                    cin>>stype;
+
+                     if(check_number(stype) == false){
+                        cout<<"Not valid Type try again";
+                        return 0;
+                    }
+
+                    type = stoi(stype);
+
+                    if(type != 0 && type != 1){
+                        cout<<"Not a valid Type try again";
+                        return 0;
+                    }
+
                     Library.addUser(name,type);
                     cout<<"\nDo you wanted to continue with further options y/n: ";
                     char option;
