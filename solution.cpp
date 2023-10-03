@@ -937,13 +937,13 @@ class library{
             int uid = temp->getUserIdOfTheBorrower(bno);
             
             if(uid == INF){
-                cout << "Journal belongs to section : " << temp_Idt[1] <<" Of "<<temp_Idt[0]<< " shelf : " << temp_Idt[2] << " and drawer : " <<temp_Idt[3]<<endl;
+                cout << "Book belongs to section : " << temp_Idt[1] <<" Of "<<temp_Idt[0]<< " shelf : " << temp_Idt[2] << " and drawer : " <<temp_Idt[3]<<endl;
             }else{
                 if(temp_Idt[0] != "IIITD"){
-                    cout<<"This Journal is borrowed by user with id "<<-(uid)<<" "<<"from IIITD"<<"\n"; 
+                    cout<<"This Book is borrowed by user with id "<<-(uid)<<" "<<"from IIITD"<<"\n"; 
                     cout<<"Items issue Date :- "<<temp->getIssueDateOfTheBook(bno)<<endl;
                 }else{
-                    cout<<"This Journal is borrowed by user with id "<<uid<<"\n"; 
+                    cout<<"This Book is borrowed by user with id "<<uid<<"\n"; 
                     cout<<"Items issue Date :- "<<temp->getIssueDateOfTheBook(bno)<<endl;
                 }
             }
@@ -1530,13 +1530,13 @@ int main(){
                             journal *Book1 = DTU.find("",name,DTUIdentifier);
                             if(Book1 != nullptr){
                                 Library.borrowJournalFromAnotherLibrary(User,Book1,DTU,"DTU");
-                                cout<<"Magzine Borrowed from DTU with colloboration with IIITd"<<endl;
+                                cout<<"journal Borrowed from DTU with colloboration with IIITd"<<endl;
                             }else{
                                 string IITDIdentifier = "IITD"+identifier;
                                 journal *Book2 = IITD.find("",name,IITDIdentifier);
                                 if(Book2 != nullptr){
                                     Library.borrowJournalFromAnotherLibrary(User,Book2,IITD,"IITD");
-                                    cout<<"Magzine Borrowed from IITD with colloboration with IIITd"<<endl;
+                                    cout<<"Journal Borrowed from IITD with colloboration with IIITd"<<endl;
                                 }else{
                                     cout<<"Journal not available with us and our colloborartors please come later"<<endl;
                                 }

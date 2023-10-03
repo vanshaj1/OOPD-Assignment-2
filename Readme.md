@@ -66,6 +66,13 @@
       * ->      temp_Idt[i] = token;
       * ->      i++;
       * ->  } 
+   * cite:- https://www.tutorialspoint.com/cplusplus-program-to-check-if-input-is-an-integer-or-a-string :- used to check whether string is integer or not
+      * -> bool check_number(string str) {
+      * ->    for (int i = 0; i < str.length(); i++)
+      * ->    if (isdigit(str[i]) == false)
+      * ->       return false;
+      * ->       return true;
+      * -> }
    
 
    
