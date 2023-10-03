@@ -809,7 +809,6 @@ void readingJournal(library *Library,string nameofFile){
             res += word;
         }
         res = '"'+res+'"';
-        cout<<res;
         Library->addJournals(res);
     }
 }
