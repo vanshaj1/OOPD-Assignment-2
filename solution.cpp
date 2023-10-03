@@ -1,4 +1,4 @@
-//*******************************************************Question 2******************************************************
+//******************************************************Question 2****************************************************
 #include <iostream>
 // #include <conio.h>
 #include <fstream>
@@ -7,6 +7,7 @@
 #include <cmath>
 #include <ctime>
 #include <typeinfo>
+#include<exception>
 #define INF (unsigned)!((int)0)
 
 
@@ -48,7 +49,7 @@ class library;
 
 class Item{
  public:
-    virtual void setIdentifier(int no) = 0;
+    virtual void setIdentifier(int no,string LibraryName) = 0;
     virtual string getIdentifier() = 0;
     virtual int getUserIdOfTheBorrower(int copy) = 0;
 };
@@ -216,8 +217,9 @@ class book:public Item{
             books_remaining = books_count;
 
         }
-        void setIdentifier(int no){
-            identifier = "B/" + to_string(no);
+        void setIdentifier(int no,string LibraryName){
+            identifier = LibraryName+"/B/" + to_string(no);
+            // cout<<identifier<<endl;
         }
         string getIdentifier(){
             return identifier;
@@ -257,10 +259,12 @@ class book:public Item{
             books_remaining += 1;
         }
         bool check(string title,string isbn,string isbn13,string author1,string author2, string author3, string author4, string author5,string identifier){
-            if(this->original_title == title && this->isbn == isbn && this->isbn13 == isbn13 && (this->author1 == author1 && this->author2 == author2 && this->author3 == author3 && this->author4 == author4 && this->author5 == author5 ) && this->identifier == identifier){
-                cout<<(this->original_title== title) << (this->isbn == isbn) << (this->isbn13 == isbn13) << (this->author1 == author1) << (this->author2 == author2) << (this->author3 == author3) << (this->author4 == author4) << (this->author5 == author5) << (this->identifier == identifier);
+            if(this->original_title == title && this->isbn == isbn && this->isbn13 == isbn13 && this->author1 == author1 && this->author2 == author2 && this->author3 == author3 && this->author4 == author4 && this->author5 == author5  && this->identifier == identifier){
+                // cout<<(this->original_title== title) << (this->isbn == isbn) << (this->isbn13 == isbn13) << (this->author1 == author1) << (this->author2 == author2) << (this->author3 == author3) << (this->author4 == author4) << (this->author5 == author5) << (this->identifier == identifier);
                 return true;
             }
+            // cout<<(this->identifier == identifier)<<endl;
+            // cout<<this->original_title<<  "" << title << this->isbn <<  " " << isbn << this->isbn13 <<  " " << isbn13 << this->author1 <<  " " << author1 << this->author2 <<  " " <<author2 << this->author3 <<  " " << author3 << this->author4 <<  " " << author4 << this->author5 <<  " " << author5 << this->identifier <<  " " << identifier<<endl;
             return false;
         }
         int borrow(user *User){
@@ -335,7 +339,7 @@ class book:public Item{
             }else{
                 books_remaining--;
                 int len = borrowedByIdLength;
-                string copy_identifier = libraryName + "/" + identifier +"/"+to_string(len);
+                string copy_identifier = identifier +"/"+to_string(len);
                 User->borrowBooks(copy_identifier);
                 int *newArray = new int[len+1];
                 for(int i = 0 ;i < len;i++){
@@ -461,11 +465,11 @@ class magzine:public Item{
             this->rank_wordRate = rank_wordRate;
             this->rank_daysToBePaid = rank_daysToBePaid;
             this->rank_paymentDifficulty = rank_paymentDifficulty;
-            cout<<publication;
+            // cout<<publication;
 
         }
-        void setIdentifier(int no){
-            identifier = "M/"+ to_string(no);
+        void setIdentifier(int no,string LibraryName){
+            identifier = LibraryName+"/"+"M/"+ to_string(no);
         }
         string getIdentifier(){
             return identifier;
@@ -536,7 +540,7 @@ class magzine:public Item{
         void borrow(user *User,string libraryName){
 
             int len = borrowedByIdLength;
-            string copy_identifier = libraryName + "/" + identifier +"/"+to_string(len);
+            string copy_identifier = identifier +"/"+to_string(len);
             User->borrowMagzines(copy_identifier);
             int *newArray = new int[len+1];
             for(int i = 0 ;i < len;i++){
@@ -613,8 +617,8 @@ class journal:public Item{
      void addDetails(string name){
         this->name = name;
      }
-     void setIdentifier(int no){
-            identifier = "J/"+to_string(no);
+     void setIdentifier(int no,string LibraryName){
+            identifier = LibraryName +"/"+"J/"+to_string(no);
     }
     string getIdentifier(){
         return identifier;
@@ -680,7 +684,7 @@ class journal:public Item{
     void borrow(user *User,string libraryName){
             
             int len = borrowedByIdLength;
-            string copy_identifier = libraryName + "/" + identifier +"/"+to_string(len);
+            string copy_identifier = identifier +"/"+to_string(len);
             User->borrowJournals(copy_identifier);
             int *newArray = new int[len+1];
             for(int i = 0 ;i < len;i++){
@@ -765,7 +769,7 @@ class library{
     user *users = new user[0];
     borrowedTo *Lent = new borrowedTo[0];
     borrowedFrom *borrowed = new borrowedFrom[0];
-
+    string LibraryName = "";
     int noOfItemsBorrowedFrom = 0;
     int noOfitemsBorrowedTo = 0;
     int noOfUsers = 0;
@@ -773,10 +777,25 @@ class library{
     int noOfMagzines = 0;
     int noOfJournals = 0;
     public:
+    library(){
+
+    }
+    library(string name){
+        this->LibraryName = name;
+    }
+    void setnoOfBooks(int no){
+        this->noOfBooks = no; 
+    }
+    void setnoOfMagzines(int no){
+        this->noOfMagzines = no; 
+    }
+    void setnoOfJournals(int no){
+        this->noOfJournals = no; 
+    }
      void addBook(string book_id,string goodreads_book_id,string best_book_id,string work_id,int books_count,string isbn,string isbn13,string author1,string author2,string author3,string author4,string author5, string original_publication_year,string original_title,string title,string language_code,string average_rating,string ratings_count,string work_ratings_count,string work_text_reviews_count,string ratings_1,string ratings_2,string ratings_3,string ratings_4,string ratings_5,string image_url,string small_image_url){
         book newBook;
         newBook.addDetails(book_id,goodreads_book_id,best_book_id,work_id,books_count,isbn,isbn13,author1,author2,author3,author4,author5,original_publication_year,original_title,title,language_code,average_rating,ratings_count,work_ratings_count,work_text_reviews_count,ratings_1,ratings_2,ratings_3,ratings_4,ratings_5,image_url,small_image_url);
-        newBook.setIdentifier(noOfBooks);
+        newBook.setIdentifier(noOfBooks,LibraryName);
             int len = noOfBooks;
             book *newArray = new book[len+1];
             for(int i = 0 ;i < len;i++){
@@ -789,7 +808,7 @@ class library{
      void addJournals(string name){
         journal newJournal;
         newJournal.addDetails(name);
-        newJournal.setIdentifier(noOfJournals);
+        newJournal.setIdentifier(noOfJournals,LibraryName);
             int len = noOfJournals;
             journal *newArray = new journal[len+1];
             for(int i = 0 ;i < len;i++){
@@ -811,7 +830,7 @@ class library{
                       string rank_paymentDifficulty){
         magzine newMagzine;
         newMagzine.addDetails(publication,rank,totalPaid,wordRate,daysToBePaid,paymentDifficulty,rank_totalPaid,rank_wordRate,rank_daysToBePaid,rank_paymentDifficulty);
-        newMagzine.setIdentifier(noOfMagzines);
+        newMagzine.setIdentifier(noOfMagzines,LibraryName);
         noOfMagzines++;
         
             magzine *newArray = new magzine[noOfMagzines];
@@ -823,7 +842,7 @@ class library{
 
      }
      void addUser(string name,int type){
-         cout<<"I am here";
+        //  cout<<"I am here";
         user newUser;
         
         newUser.addDetails(this->noOfUsers,name,type);
@@ -840,8 +859,11 @@ class library{
             noOfUsers++;
      }
      int getUserIdOfTheBorrowerOfAnotherLibrary(string identifier,string LibraryName,string type,int no){
+        // cout<<"I am user id of borrower";
         int len = noOfItemsBorrowedFrom;
+        // cout<<len<<endl;
         for(int i = 0 ;i < len;i++){
+            // cout<<"I am in Loop userid wala"<<endl;
              borrowedFrom temp = borrowed[i];
              if(temp.LibraryName == LibraryName && temp.item->getIdentifier() == identifier){
                 int uid = temp.item->getUserIdOfTheBorrower(no);
@@ -867,67 +889,63 @@ class library{
          return User.returnDate[bno];
      }
      bool getLocationOfBooks(string title,string isbn,string isbn13,string author1, string author2, string author3 ,string author4, string author5,string identifier,library *Library){
-        book *temp = find(title,isbn,isbn13,author1,author2,author3,author4,author5,identifier);
+        string temp_Idt[4];
+        int i = 0;
+            //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
+        string token;
+        while(identifier.length() != 0 && i < 4){
+            token = identifier.substr(0,identifier.find_first_of("/"));
+            identifier = identifier.substr(identifier.find_first_of("/") + 1);
+            temp_Idt[i] = token;
+            i++;
+        } 
+        /*************************************************************/
+        // cout<<temp_Idt[0]<<temp_Idt[1]<<typeid(temp_Idt[2]).name();
+        string fstoi = temp_Idt[3];
+        int bno;
+        try{
+            bno = stoi(fstoi);
+        }catch(exception& e){
+            cout<<"Identifier drawer or copy id is not valid"<<endl;
+            return 0;
+        }
+        string indt = temp_Idt[0]+"/"+temp_Idt[1]+"/"+ temp_Idt[2];
+        book *temp = find(title,isbn,isbn13,author1,author2,author3,author4,author5,indt);
         if(temp == nullptr){
-            string temp_Idt[4];
-            int i = 0;
-             //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
-            string token;
-            while(identifier.length() != 0 && i < 4){
-                token = identifier.substr(0,identifier.find_first_of("/"));
-                identifier = identifier.substr(identifier.find_first_of("/") + 1);
-                temp_Idt[i] = token;
-                i++;
-            } 
-            /*************************************************************/
-            // cout<<temp_Idt[0]<<temp_Idt[1]<<typeid(temp_Idt[2]).name();
-            string fstoi = temp_Idt[3]+"";
-            int bno = stoi(fstoi);
-            string indt = temp_Idt[1] + temp_Idt[2];
-            book *tal = Library->find(title,isbn,isbn13,author1,author2,author3,author4,author5,indt);
-            if(tal != nullptr){
-                int uid = getUserIdOfTheBorrowerOfAnotherLibrary(indt,temp_Idt[0],"M",bno);
-                if(uid == -1){
-                    cout << "Magzine belongs to Virtual section "<<temp_Idt[1]<<"of  : " << temp_Idt[0] << " Virtual shelf : " << temp_Idt[2]<<"we can't give you more information because this is other library"<<endl;
-                }else{
-                    cout<<"This magzine is borrowed by user with id "<<uid<<"\n"; 
-                    cout<<"Items issue Date :- "<<getIssueDateofTheItemBorrowedByAnotherLibrary(uid,bno)<<endl;
-                    cout<<"Items return Date :- "<<getreturnDateofTheItemBorrowedByAnotherLibrary(uid,bno)<<endl;
-                }
-                 //********************************Open Source*********************** cite: https://stackoverflow.com/a/997988
-                std::time_t t = std::time(0);   // get time now
-                std::tm* now = std::localtime(&t);
-                //******************************************************************
-                cout<<"Requested for Item Location on :- "<<now->tm_year + 1900<<'-'<<now->tm_mon + 1<<'-'<<now->tm_mday;
-                return true;
-            }
+            // book *tal = Library->find(title,isbn,isbn13,author1,author2,author3,author4,author5,indt);
+            // if(tal != nullptr){
+            //     int uid = getUserIdOfTheBorrowerOfAnotherLibrary(indt,temp_Idt[0],"B",bno);
+            //     if(uid == -1 || noOfItemsBorrowedFrom == 0){
+            //         cout << "Book belongs to section "<<temp_Idt[1]<<"of  : " << temp_Idt[0] << "shelf : " << temp_Idt[2]<<"we can't give you more information because this is other library"<<endl;
+            //     }else{
+            //         cout<<"This Book is borrowed by user with id "<<uid<<"\n"; 
+            //         cout<<"Items issue Date :- "<<getIssueDateofTheItemBorrowedByAnotherLibrary(uid,bno)<<endl;
+            //         cout<<"Items return Date :- "<<getreturnDateofTheItemBorrowedByAnotherLibrary(uid,bno)<<endl;
+            //     }
+            //      //********************************Open Source*********************** cite: https://stackoverflow.com/a/997988
+            //     std::time_t t = std::time(0);   // get time now
+            //     std::tm* now = std::localtime(&t);
+            //     //******************************************************************
+            //     cout<<"Requested for Item Location on :- "<<now->tm_year + 1900<<'-'<<now->tm_mon + 1<<'-'<<now->tm_mday;
+            //     return true;
+            // }
            
             cout << "Item is not present with and at "<<temp_Idt[0];
             return false;
         }else{
             
-            string temp_Idt[3];
-            int i = 0;
-            //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
-            string token;
-            while(identifier.length() != 0 && i < 3){
-                token = identifier.substr(0,identifier.find_first_of("/"));
-                identifier = identifier.substr(identifier.find_first_of("/") + 1);
-                temp_Idt[i] = token;
-                i++;
-            } 
-            /*************************************************************/
-            // cout<<temp_Idt[0]<<temp_Idt[1]<<typeid(temp_Idt[2]).name();
-            string fstoi = temp_Idt[2]+"";
-            int bno = stoi(fstoi);
             int uid = temp->getUserIdOfTheBorrower(bno);
-            if(uid == -1){
-                cout << "Book belongs to section : " << temp_Idt[0] << " shelf : " << temp_Idt[1] << " and drawer : " <<temp_Idt[2]<<endl;
+            
+            if(uid == INF){
+                cout << "Journal belongs to section : " << temp_Idt[1] <<" Of "<<temp_Idt[0]<< " shelf : " << temp_Idt[2] << " and drawer : " <<temp_Idt[3]<<endl;
             }else{
-                cout<<"This book is borrowed by user with id "<<uid<<"\n";
-                cout<<"Items issue Date :- "<<temp->getIssueDateOfTheBook(bno)<<endl;
-                cout<<"Items return Date :- "<<temp->getReturnDateOfTheBook(bno)<<endl;
-
+                if(temp_Idt[0] != "IIITD"){
+                    cout<<"This Journal is borrowed by user with id "<<-(uid)<<" "<<"from IIITD"<<"\n"; 
+                    cout<<"Items issue Date :- "<<temp->getIssueDateOfTheBook(bno)<<endl;
+                }else{
+                    cout<<"This Journal is borrowed by user with id "<<uid<<"\n"; 
+                    cout<<"Items issue Date :- "<<temp->getIssueDateOfTheBook(bno)<<endl;
+                }
             }
             //********************************Open Source*********************** cite: https://stackoverflow.com/a/997988
             std::time_t t = std::time(0);   // get time now
@@ -938,64 +956,63 @@ class library{
         }
      }
      bool getLocationOfJournals(string branch,string name,string identifier,library *Library){
-        journal *temp = find(branch,name,identifier);
+        string temp_Idt[4];
+        int i = 0;
+            //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
+        string token;
+        while(identifier.length() != 0 && i < 4){
+            token = identifier.substr(0,identifier.find_first_of("/"));
+            identifier = identifier.substr(identifier.find_first_of("/") + 1);
+            temp_Idt[i] = token;
+            i++;
+        } 
+        /*************************************************************/
+        // cout<<temp_Idt[0]<<temp_Idt[1]<<typeid(temp_Idt[2]).name();
+        string fstoi = temp_Idt[3];
+        int bno;
+        try{
+            bno = stoi(fstoi);
+        }catch(exception& e){
+            cout<<"Identifier drawer or copy id is not valid"<<endl;
+            return 0;
+        }
+        string indt = temp_Idt[0]+"/"+temp_Idt[1] +"/"+temp_Idt[2];
+        journal *temp = find(branch,name,indt);
         if(temp == nullptr){
-            string temp_Idt[4];
-            int i = 0;
-             //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
-            string token;
-            while(identifier.length() != 0 && i < 4){
-                token = identifier.substr(0,identifier.find_first_of("/"));
-                identifier = identifier.substr(identifier.find_first_of("/") + 1);
-                temp_Idt[i] = token;
-                i++;
-            } 
-            /*************************************************************/
-            // cout<<temp_Idt[0]<<temp_Idt[1]<<typeid(temp_Idt[2]).name();
-            string fstoi = temp_Idt[3]+"";
-            int bno = stoi(fstoi);
-            string indt = temp_Idt[1] + temp_Idt[2];
-            journal *tal = Library->find(branch,name,indt);
-            if(tal != nullptr){
-                int uid = getUserIdOfTheBorrowerOfAnotherLibrary(indt,temp_Idt[0],"M",bno);
-                if(uid == -1){
-                    cout << "Magzine belongs to Virtual section "<<temp_Idt[1]<<"of  : " << temp_Idt[0] << " Virtual shelf : " << temp_Idt[2]<<"we can't give you more information because this is other library"<<endl;
-                }else{
-                    cout<<"This magzine is borrowed by user with id "<<uid<<"\n"; 
-                    cout<<"Items issue Date :- "<<getIssueDateofTheItemBorrowedByAnotherLibrary(uid,bno)<<endl;
-                }
-                 //********************************Open Source*********************** cite: https://stackoverflow.com/a/997988
-                std::time_t t = std::time(0);   // get time now
-                std::tm* now = std::localtime(&t);
-                //******************************************************************
-                cout<<"Requested for Item Location on :- "<<now->tm_year + 1900<<'-'<<now->tm_mon + 1<<'-'<<now->tm_mday;
-                return true;
-            }
+
+            // journal *tal = Library->find(branch,name,indt);
+            // if(tal != nullptr){
+            //     int uid = getUserIdOfTheBorrowerOfAnotherLibrary(indt,temp_Idt[0],"J",bno);
+            //     if(uid == -1 || noOfItemsBorrowedFrom == 0){
+            //         cout << "Journal belongs to Virtual section "<<temp_Idt[1]<<"of  : " << temp_Idt[0] << " Virtual shelf : " << temp_Idt[2]<<"we can't give you more information because this is other library"<<endl;
+            //     }else{
+            //         cout<<"This journal is borrowed by user with id "<<uid<<"\n"; 
+            //         cout<<"Items issue Date :- "<<getIssueDateofTheItemBorrowedByAnotherLibrary(uid,bno)<<endl;
+            //     }
+            //      //********************************Open Source*********************** cite: https://stackoverflow.com/a/997988
+            //     std::time_t t = std::time(0);   // get time now
+            //     std::tm* now = std::localtime(&t);
+            //     //******************************************************************
+            //     cout<<"Requested for Item Location on :- "<<now->tm_year + 1900<<'-'<<now->tm_mon + 1<<'-'<<now->tm_mday;
+            //     return true;
+            // }
            
             cout << "Item is not present with and at "<<temp_Idt[0];
             return false;
         }else{
             
-            string temp_Idt[3];
-            int i = 0;
-            //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
-            string token;
-            while(identifier.length() != 0 && i < 3){
-                token = identifier.substr(0,identifier.find_first_of("/"));
-                identifier = identifier.substr(identifier.find_first_of("/") + 1);
-                temp_Idt[i] = token;
-                i++;
-            } 
-            /*************************************************************/
-            // cout<<temp_Idt[0]<<temp_Idt[1]<<typeid(temp_Idt[2]).name();
-            string fstoi = temp_Idt[2]+"";
-            int bno = stoi(fstoi);
             int uid = temp->getUserIdOfTheBorrower(bno);
-            if(uid == -1){
-                cout << "Jounal belongs to section : " << temp_Idt[0] << "virtual shelf : " << temp_Idt[1] << " and virtual drawer : " <<temp_Idt[2]<<endl;
+            
+            if(uid == INF){
+                cout << "Journal belongs to Virtual section : " << temp_Idt[1] <<" Of "<<temp_Idt[0]<< " Virtual shelf : " << temp_Idt[2] << " and Virtual drawer : " <<temp_Idt[3]<<endl;
             }else{
-                cout<<"This journal is borrowed by user with id "<<uid<<"\n"; 
-                cout<<"Items issue Date :- "<<temp->getIssueDateOfTheJournal(bno)<<endl;
+                if(temp_Idt[0] != "IIITD"){
+                    cout<<"This Journal is borrowed by user with id "<<-(uid)<<" "<<"from IIITD"<<"\n"; 
+                    cout<<"Items issue Date :- "<<temp->getIssueDateOfTheJournal(bno)<<endl;
+                }else{
+                    cout<<"This Journal is borrowed by user with id "<<uid<<"\n"; 
+                    cout<<"Items issue Date :- "<<temp->getIssueDateOfTheJournal(bno)<<endl;
+                }
             }
             //********************************Open Source*********************** cite: https://stackoverflow.com/a/997988
             std::time_t t = std::time(0);   // get time now
@@ -1006,64 +1023,64 @@ class library{
         }
      }
      bool getLocationOfMagzines(string publication,string identifier,library *Library){
-        magzine *temp = find(publication,identifier);
+        string temp_Idt[4];
+        int i = 0;
+            //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
+        string token;
+        while(identifier.length() != 0 && i < 4){
+            token = identifier.substr(0,identifier.find_first_of("/"));
+            identifier = identifier.substr(identifier.find_first_of("/") + 1);
+            temp_Idt[i] = token;
+            i++;
+        } 
+        /*************************************************************/
+        // cout<<temp_Idt[0]<<temp_Idt[1]<<typeid(temp_Idt[2]).name();
+        string fstoi = temp_Idt[3];
+        int bno;
+        try{
+            bno = stoi(fstoi);
+        }catch(exception& e){
+            cout<<"Identifier drawer or copy id is not valid"<<endl;
+            return 0;
+        }
+        string indt = temp_Idt[0]+"/"+temp_Idt[1] +"/"+temp_Idt[2];
+        // cout<<"\n"<<temp_Idt[1]<<endl;
+        magzine *temp = find(publication,indt);
         if(temp == nullptr){
-            string temp_Idt[4];
-            int i = 0;
-             //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
-            string token;
-            while(identifier.length() != 0 && i < 4){
-                token = identifier.substr(0,identifier.find_first_of("/"));
-                identifier = identifier.substr(identifier.find_first_of("/") + 1);
-                temp_Idt[i] = token;
-                i++;
-            } 
-            /*************************************************************/
-            // cout<<temp_Idt[0]<<temp_Idt[1]<<typeid(temp_Idt[2]).name();
-            string fstoi = temp_Idt[3]+"";
-            int bno = stoi(fstoi);
-            string indt = temp_Idt[1] + temp_Idt[2];
-            magzine *tal = Library->find(publication,indt);
-            if(tal != nullptr){
-                int uid = getUserIdOfTheBorrowerOfAnotherLibrary(indt,temp_Idt[0],"M",bno);
-                if(uid == -1){
-                    cout << "Magzine belongs to Virtual section "<<temp_Idt[1]<<"of  : " << temp_Idt[0] << " Virtual shelf : " << temp_Idt[2]<<"we can't give you more information because this is other library"<<endl;
-                }else{
-                    cout<<"This magzine is borrowed by user with id "<<uid<<"\n"; 
-                    cout<<"Items issue Date :- "<<getIssueDateofTheItemBorrowedByAnotherLibrary(uid,bno)<<endl;
-                }
-                 //********************************Open Source*********************** cite: https://stackoverflow.com/a/997988
-                std::time_t t = std::time(0);   // get time now
-                std::tm* now = std::localtime(&t);
-                //******************************************************************
-                cout<<"Requested for Item Location on :- "<<now->tm_year + 1900<<'-'<<now->tm_mon + 1<<'-'<<now->tm_mday;
-                return true;
-            }
+            
+            // magzine *tal = Library->find(publication,indt);
+            // if(tal != nullptr){
+            //     int uid = getUserIdOfTheBorrowerOfAnotherLibrary(indt,temp_Idt[0],"M",bno);
+            //     if(uid == -1 || noOfItemsBorrowedFrom == 0){
+            //         cout << "Magzine belongs to Virtual section "<<temp_Idt[1]<<"of  : " << temp_Idt[0] << " Virtual shelf : " << temp_Idt[2]<<"we can't give you more information because this is other library"<<endl;
+            //     }else{
+            //         cout<<"This magzine is borrowed by user with id "<<uid<<"\n"; 
+            //         cout<<"Items issue Date :- "<<getIssueDateofTheItemBorrowedByAnotherLibrary(uid,bno)<<endl;
+            //     }
+            //      //********************************Open Source*********************** cite: https://stackoverflow.com/a/997988
+            //     std::time_t t = std::time(0);   // get time now
+            //     std::tm* now = std::localtime(&t);
+            //     //******************************************************************
+            //     cout<<"Requested for Item Location on :- "<<now->tm_year + 1900<<'-'<<now->tm_mon + 1<<'-'<<now->tm_mday;
+            //     return true;
+            // }
            
             cout << "Item is not present with and at "<<temp_Idt[0];
             return false;
         }else{
             
-            string temp_Idt[3];
-            int i = 0;
-            //*********************Open source stack overflow************* cite:- https://stackoverflow.com/a/14265607
-            string token;
-            while(identifier.length() != 0 && i < 3){
-                token = identifier.substr(0,identifier.find_first_of("/"));
-                identifier = identifier.substr(identifier.find_first_of("/") + 1);
-                temp_Idt[i] = token;
-                i++;
-            } 
-            /*************************************************************/
-            // cout<<temp_Idt[0]<<temp_Idt[1]<<typeid(temp_Idt[2]).name();
-            string fstoi = temp_Idt[2]+"";
-            int bno = stoi(fstoi);
             int uid = temp->getUserIdOfTheBorrower(bno);
-            if(uid == -1){
-                cout << "Magzine belongs to Virtual section : " << temp_Idt[0] << " Virtual shelf : " << temp_Idt[1] << " and Virtual drawer : " <<temp_Idt[2]<<endl;
+            
+            if(uid == INF){
+                cout << "Magzine belongs to Virtual section : " << temp_Idt[1] <<" Of "<<temp_Idt[0]<< " Virtual shelf : " << temp_Idt[2] << " and Virtual drawer : " <<temp_Idt[3]<<endl;
             }else{
-                cout<<"This magzine is borrowed by user with id "<<uid<<"\n"; 
-                cout<<"Items issue Date :- "<<temp->getIssueDateOfTheMagzine(bno)<<endl;
+                if(temp_Idt[0] != "IIITD"){
+                    cout<<"This magzine is borrowed by user with id "<<-(uid)<<" "<<"from IIITD"<<"\n"; 
+                    cout<<"Items issue Date :- "<<temp->getIssueDateOfTheMagzine(bno)<<endl;
+                }else{
+                    cout<<"This magzine is borrowed by user with id "<<uid<<"\n"; 
+                    cout<<"Items issue Date :- "<<temp->getIssueDateOfTheMagzine(bno)<<endl;
+                }
             }
             //********************************Open Source*********************** cite: https://stackoverflow.com/a/997988
             std::time_t t = std::time(0);   // get time now
@@ -1239,11 +1256,12 @@ class library{
 
 
 
-void readingJournal(library *Library,string nameofFile){
-
+void readingJournal(library *Library,string nameofFile,int sidx,int eidx){
+    int i = 0;
     string line;
     ifstream file(nameofFile);
-    while(getline(file,line)){
+    while(getline(file,line)){  
+        if(i >= sidx && i <= eidx){
             stringstream s(line);
             string res = "";
             string word; 
@@ -1251,18 +1269,20 @@ void readingJournal(library *Library,string nameofFile){
                 res += word;
             }
             res = '"'+res+'"';
-            cout<<res;
+            // cout<<res;
             Library->addJournals(res);
-
+        }
+        i++;
     }
 }
 
-void readingMagzines(library *Library,string nameofFile){
+void readingMagzines(library *Library,string nameofFile,int sidx,int eidx){
     string line;
     ifstream file(nameofFile);
-
+    int idx = 0;
     getline(file,line);
     while(getline(file,line)){
+        if(idx >= sidx && idx <= eidx){
             stringstream s(line);
             string res[10];
             string word;
@@ -1272,17 +1292,20 @@ void readingMagzines(library *Library,string nameofFile){
                 i++;
             }
             Library->addMagzines(res[0],res[1],res[2],res[3],res[4],res[5],res[6],res[7],res[8],res[9]);
+        }   
+        idx++;
 
     }
 }
 
-void readingBooks(library *Library,string nameofFile){
-    cout<<"I am in readingBooks";
+void readingBooks(library *Library,string nameofFile,int sidx,int eidx){
+    // cout<<"I am in readingBooks";
     string line;
     ifstream file(nameofFile);
-    
+    int idx = 0;
     getline(file,line);
     while(getline(file,line)){
+        if(idx >= sidx && idx <= eidx){
             stringstream s(line);
             string res[27];
             string word;
@@ -1309,29 +1332,42 @@ void readingBooks(library *Library,string nameofFile){
             // cout<<authors[0]<<" , "<<authors[1]<<"\n";
             // cout<<res[7]<<" , "<<res[6]<<"\n";
             Library->addBook(res[0],res[1],res[2],res[3],stoi(res[4]),res[5],res[6],res[7],res[8],res[9],res[10],res[11],res[12],res[13],res[14],res[15],res[16],res[17],res[18],res[19],res[20],res[21],res[22],res[23],res[24],res[25],res[26]);
-        
+        }
+         idx++;   
     }
 }
 
+//****************************************Open Source Check Integer or string**********************************
+bool check_number(string str) {
+   for (int i = 0; i < str.length(); i++)
+   if (isdigit(str[i]) == false)
+      return false;
+      return true;
+}
+//**************************************************************************************************************
+
+
+
+
 int main(){
-    library Library;
-    library DTU;
-    library IITD;
+    library Library("IIITD");
+    library DTU("DTU");
+    library IITD("IITD");
 
     //***********************************IIITD Library***************************************
-    readingBooks(&Library,"books.csv");
-    readingMagzines(&Library,"publications_rank.csv");
-    readingJournal(&Library,"journals.csv");
+    readingBooks(&Library,"books.csv",0,40);
+    readingMagzines(&Library,"publications_rank.csv",0,40);
+    readingJournal(&Library,"journals.csv",0,45);
     //***************************************************************************************
     //***************************************DTU*********************************************
-    readingBooks(&DTU,"books.csv");
-    readingMagzines(&DTU,"publications_rank.csv");
-    readingJournal(&IITD,"journals.csv");
+    readingBooks(&DTU,"books.csv",0,80);
+    readingMagzines(&DTU,"publications_rank.csv",0,70);
+    readingJournal(&DTU,"journals.csv",0,80);
     //***************************************************************************************
     //***************************************IITD********************************************
-    readingBooks(&IITD,"books.csv");
-    readingMagzines(&IITD,"publications_rank.csv");
-    readingJournal(&IITD,"journals.csv");
+    readingBooks(&IITD,"books.csv",0,98);
+    readingMagzines(&IITD,"publications_rank.csv",0,79);
+    readingJournal(&IITD,"journals.csv",0,98);
     //***************************************************************************************
 
     while(true){
@@ -1347,13 +1383,27 @@ int main(){
                 cin>>item;
                 if(item == 'B'){
                     string name;
-                    int uid;
+                    string suid;
                     
                     cout<<"Enter name: ";
                     cin.ignore();
                     getline(cin,name);
+
+                    if(check_number(name) == true){
+                        cout<<"Not valid Name try again";
+                        return 0;
+                    }
+
                     cout<<"Enter user id:- ";
-                    cin>>uid;
+                    cin>>suid;
+
+                    if(check_number(suid) == false){
+                        cout<<"Not valid User id try again";
+                        return 0;
+                    }
+                    
+
+                    int uid = stoi(suid);
                     user *User = Library.find(uid);
                     if(User == nullptr){
                         cout<<"Your are not registered with us, Kindly register yourself first \n";
@@ -1397,7 +1447,15 @@ int main(){
                                             goto option;
                                     }
                                 }
-                                book *Book1 = DTU.find(title ,isbn,isbn13,author1,author2,author3,author4,author5,identifier);
+                                 try{
+                                     identifier = identifier.substr(identifier.find_first_of('/'));
+                                    }catch(exception& e){
+                                        cout<<"Identifer is not valid should be informat of CLG/TYPE/SHELF/DRAWER"<<endl;
+                                        return 0;
+                                    }
+                                // cout<<identifier;
+                                string DTUIdentifier = "DTU"+identifier;
+                                book *Book1 = DTU.find(title ,isbn,isbn13,author1,author2,author3,author4,author5,DTUIdentifier);
                                 if(Book1 != nullptr){
                                     int l1 = Library.borrowBookFromAnotherLibrary(User,Book1,DTU,"DTU");
                                     if(l1 == 0){
@@ -1407,7 +1465,8 @@ int main(){
                                             goto option;
                                         }
                                 }
-                                book *Book2 = DTU.find(title ,isbn,isbn13,author1,author2,author3,author4,author5,identifier);
+                                string IITDIdentifier = "IITD"+identifier;
+                                book *Book2 = IITD.find(title ,isbn,isbn13,author1,author2,author3,author4,author5,IITDIdentifier);
                                 if(Book2 != nullptr){
                                     int l2 = Library.borrowBookFromAnotherLibrary(User,Book2,IITD,"IITD");
                                     if(l2 == 0){
@@ -1425,14 +1484,28 @@ int main(){
                     
                 }else if(item == 'J'){
 
-                    string name1;
-                    int uid;
-                   
+                    string name;
+                    string suid;
+                    
                     cout<<"Enter name: ";
                     cin.ignore();
-                    getline(cin,name1);
+                    getline(cin,name);
+
+                    if(check_number(name) == true){
+                        cout<<"Not valid Name try again";
+                        return 0;
+                    }
+
                     cout<<"Enter user id:- ";
-                    cin>>uid;
+                    cin>>suid;
+
+                    if(check_number(suid) == false){
+                        cout<<"Not valid User id try again";
+                        return 0;
+                    }
+                    
+                    
+                    int uid = stoi(suid);
                     user *User = Library.find(uid);
                     if(User == nullptr){
                         cout<<"Your are not registered with us, Kindly register yourself first \n";
@@ -1447,12 +1520,20 @@ int main(){
                         journal *Journal = Library.find("",name,identifier);
                         if(Journal == nullptr){
                             cout<<"This Journal is not available with us \n ";
-                            journal *Book1 = DTU.find("",name,identifier);
+                             try{
+                                identifier = identifier.substr(identifier.find_first_of('/'));
+                            }catch(exception& e){
+                                cout<<"Identifer is not valid should be informat of CLG/TYPE/SHELF/DRAWER"<<endl;
+                                return 0;
+                            }
+                            string DTUIdentifier = "DTU"+identifier;
+                            journal *Book1 = DTU.find("",name,DTUIdentifier);
                             if(Book1 != nullptr){
                                 Library.borrowJournalFromAnotherLibrary(User,Book1,DTU,"DTU");
                                 cout<<"Magzine Borrowed from DTU with colloboration with IIITd"<<endl;
                             }else{
-                                journal *Book2 = IITD.find("",name,identifier);
+                                string IITDIdentifier = "IITD"+identifier;
+                                journal *Book2 = IITD.find("",name,IITDIdentifier);
                                 if(Book2 != nullptr){
                                     Library.borrowJournalFromAnotherLibrary(User,Book2,IITD,"IITD");
                                     cout<<"Magzine Borrowed from IITD with colloboration with IIITd"<<endl;
@@ -1470,13 +1551,27 @@ int main(){
                 }else if(item == 'M'){
 
                     string name;
-                    int uid;
+                    string suid;
                     
                     cout<<"Enter name: ";
                     cin.ignore();
                     getline(cin,name);
+
+                    if(check_number(name) == true){
+                        cout<<"Not valid Name try again";
+                        return 0;
+                    }
+
                     cout<<"Enter user id:- ";
-                    cin>>uid;
+                    cin>>suid;
+
+                    if(check_number(suid) == false){
+                        cout<<"Not valid User id try again";
+                        return 0;
+                    }
+                    
+                    
+                    int uid = stoi(suid);
                     user *User = Library.find(uid);
                     if(User == nullptr){
                         cout<<"\nYour are not registered with us, Kindly register yourself first ";
@@ -1492,12 +1587,28 @@ int main(){
                         // cout<<Magzine<<"Magzine add";
                         if(Magzine == nullptr){
                             cout<<"This Magzine is not available with us \n ";
-                            magzine *Book1 = DTU.find(publication,identifier);
+                             try{
+                                identifier = identifier.substr(identifier.find_first_of('/'));
+                            }catch(exception& e){
+                                cout<<"Identifer is not valid should be informat of CLG/TYPE/SHELF/DRAWER"<<endl;
+                                return 0;
+                            }
+                            // cout<<identifier;
+                            string DTUIdentifier = "DTU"+identifier;
+                            magzine *Book1 = DTU.find(publication,DTUIdentifier);
                             if(Book1 != nullptr){
                                 Library.borrowMagzineFromAnotherLibrary(User,Book1,DTU,"DTU");
                                 cout<<"Magzine Borrowed from DTU with colloboration with IIITd"<<endl;
                             }else{
-                                magzine *Book2 = IITD.find(publication,identifier);
+                                try{
+                                    identifier = identifier.substr(identifier.find_first_of('/'));
+                                }catch(exception& e){
+                                    cout<<"Identifer is not valid should be informat of CLG/TYPE/SHELF/DRAWER"<<endl;
+                                    return 0;
+                                }
+                                // cout<<identifier;
+                                string IITDIdentifier = "IITD"+identifier;
+                                magzine *Book2 = IITD.find(publication,IITDIdentifier);
                                 if(Book2 != nullptr){
                                     Library.borrowMagzineFromAnotherLibrary(User,Book2,IITD,"IITD");
                                     cout<<"Magzine Borrowed from IITD with colloboration with IIITd"<<endl;
@@ -1551,9 +1662,24 @@ int main(){
                         getline(cin,author5);
                         cout<<"Enter Identifier:- ";
                         cin>>identifier;
-                        if(Library.getLocationOfBooks(title ,isbn,isbn13,author1,author2,author3,author4,author5,identifier,&Library) == false){
-                            if(DTU.getLocationOfBooks(title ,isbn,isbn13,author1,author2,author3,author4,author5,identifier,&DTU) == false){
-                                IITD.getLocationOfBooks(title ,isbn,isbn13,author1,author2,author3,author4,author5,identifier,&IITD);
+
+
+
+
+                        try{
+                            identifier = identifier.substr(identifier.find_first_of('/'));
+                        }catch(exception& e){
+                            cout<<"Identifer is not valid should be informat of CLG/TYPE/SHELF/DRAWER"<<endl;
+                            return 0;
+                        }
+                        
+                        // cout<<identifier;
+                        string IIITDIdentifier = "IIITD"+identifier;
+                        if(Library.getLocationOfBooks(title ,isbn,isbn13,author1,author2,author3,author4,author5,IIITDIdentifier,&Library) == false){
+                            string DTUIdentifier = "DTU"+identifier;
+                            if(DTU.getLocationOfBooks(title ,isbn,isbn13,author1,author2,author3,author4,author5,DTUIdentifier,&DTU) == false){
+                                string IITDIdentifier = "IITD"+identifier;
+                                IITD.getLocationOfBooks(title ,isbn,isbn13,author1,author2,author3,author4,author5,IITDIdentifier,&IITD);
                             }
                         }
                     }else if(item == 'M'){
@@ -1564,10 +1690,19 @@ int main(){
                         getline(cin,publication);
                         cout<< "Enter identifier- ";
                         cin >> identifier;
-                        
-                        if(Library.getLocationOfMagzines(publication,identifier,&Library) == false){
-                            if(DTU.getLocationOfMagzines(publication,identifier,&DTU) == false){
-                                IITD.getLocationOfMagzines(publication,identifier,&IITD);
+                         try{
+                            identifier = identifier.substr(identifier.find_first_of('/'));
+                        }catch(exception& e){
+                            cout<<"Identifer is not valid should be informat of CLG/TYPE/SHELF/DRAWER"<<endl;
+                            return 0;
+                        }
+                        // cout<<identifier;
+                        string IIITDIdentifier = "IIITD"+identifier;
+                        if(Library.getLocationOfMagzines(publication,IIITDIdentifier,&Library) == false){
+                            string DTUIdentifier = "DTU"+identifier;
+                            if(DTU.getLocationOfMagzines(publication,DTUIdentifier,&DTU) == false){
+                                 string IITDIdentifier = "IITD"+identifier;
+                                IITD.getLocationOfMagzines(publication,IITDIdentifier,&IITD);
                             }
                         }
                     }else if(item == 'J'){
@@ -1578,9 +1713,19 @@ int main(){
                         getline(cin,name);
                         cout<<"Enter identifier:- ";
                         cin>> identifier;
-                        if(Library.getLocationOfJournals("",name,identifier,&Library) == false){
-                            if(DTU.getLocationOfJournals("",name,identifier,&DTU) == false){
-                                IITD.getLocationOfJournals("",name,identifier,&IITD);
+                         try{
+                            identifier = identifier.substr(identifier.find_first_of('/'));
+                        }catch(exception& e){
+                            cout<<"Identifer is not valid should be informat of CLG/TYPE/SHELF/DRAWER"<<endl;
+                            return 0;
+                        }
+                        // cout<<identifier;
+                        string IIITDIdentifier = "IIITD"+identifier;
+                        if(Library.getLocationOfJournals("",name,IIITDIdentifier,&Library) == false){
+                            string DTUIdentifier = "DTU"+identifier;
+                            if(DTU.getLocationOfJournals("",name,DTUIdentifier,&DTU) == false){
+                                string IITDIdentifier = "IITD"+identifier;
+                                IITD.getLocationOfJournals("",name,IITDIdentifier,&IITD);
                             }
                         }
                     }
@@ -1594,14 +1739,34 @@ int main(){
                 }
         case '2':
                 {   string name;
+                    string stype;
                     int type;
                      
                     cout<<"For registration please provide you details as follows: \n";
                     cout<<"Enter your name: ";
                     cin.ignore();
                     getline(cin,name);
+
+                    if(check_number(name) == true){
+                        cout<<"Not valid Name try again";
+                        return 0;
+                    }
+
                     cout<<"Enter your user type 0 for student and 1 for professor: ";
-                    cin>>type;
+                    cin>>stype;
+
+                     if(check_number(stype) == false){
+                        cout<<"Not valid Type try again";
+                        return 0;
+                    }
+
+                    type = stoi(stype);
+
+                    if(type != 0 && type != 1){
+                        cout<<"Not a valid Type try again";
+                        return 0;
+                    }
+
                     Library.addUser(name,type);
                     cout<<"\nDo you wanted to continue with further options y/n: ";
                     char option;
@@ -1610,6 +1775,7 @@ int main(){
                         return 0;
                     }
                     break;
+
                 }
         case '3':
                 {   string title ,isbn,isbn13,author1,author2,author3,author4,author5,identifier;
